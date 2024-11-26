@@ -1,6 +1,7 @@
 # User guide
 ## Requirements and installation
 The DeepGPO.yml lists all the dependencies of the DeepGPO. To quickly set up an environment for our model, use the following command
+```
 conda env create -f DeepGPO.yml
 ```
 Installing a specific package usually takes a few minutes on a standard desktop and setting up the complete environment may take approximately an hour. Once the library is installed, you can verify the installation by importing the library in Python and checking the version number:
