@@ -7,7 +7,6 @@ import numpy as np
 # import json
 import torch
 # import masses
-import ipdb
 # --------------------------- mgf processing ------------------------------#
 
 def mgf_process(mgfdatafold:str, sourceorign:str):

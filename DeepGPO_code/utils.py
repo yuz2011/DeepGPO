@@ -1,5 +1,5 @@
 import fastNLP
-import wandb
+# import wandb
 # import torch
 #保留rt,by,BY预测过程中不会改变的结构超参，需要优化的部分，写到模型里面，也可以叫args
 maxlength=60
@@ -32,33 +32,33 @@ GNN_global_num_layers=7  #7
 loc=True
 rt_method="R2" #R2,cos,delta
 
-class WandbCallback(fastNLP.Callback):
-    r"""
+# class WandbCallback(fastNLP.Callback):
+#     r"""
     
-    """
-    def __init__(self,project,name,config:dict):
-        r"""
+#     """
+#     def __init__(self,project,name,config:dict):
+#         r"""
         
-        :param str name: project名字
-        :param dict config: 模型超参
-        :
-        """
-        super().__init__()
-        self.project = project
-        self.name=name
-        self.config=config
-    def on_train_begin(self):
-        wandb.init(
-      # Set entity to specify your username or team name
-      # ex: entity="carey",
-      # Set the project where this run will be logged
-      project=self.project,
-      name=self.name, 
-      # Track hyperparameters and run metadata
-      config=self.config)
-    def on_train_end(self):
-        wandb.finish()
-    def on_valid_end(self, eval_result, metric_key, optimizer, is_better_eval):
-        wandb.log(eval_result)
-    def on_backward_begin(self,loss):
-        wandb.log({"loss":loss})
+#         :param str name: project名字
+#         :param dict config: 模型超参
+#         :
+#         """
+#         super().__init__()
+#         self.project = project
+#         self.name=name
+#         self.config=config
+#     def on_train_begin(self):
+#         wandb.init(
+#       # Set entity to specify your username or team name
+#       # ex: entity="carey",
+#       # Set the project where this run will be logged
+#       project=self.project,
+#       name=self.name, 
+#       # Track hyperparameters and run metadata
+#       config=self.config)
+#     def on_train_end(self):
+#         wandb.finish()
+#     def on_valid_end(self, eval_result, metric_key, optimizer, is_better_eval):
+#         wandb.log(eval_result)
+#     def on_backward_begin(self,loss):
+#         wandb.log({"loss":loss})

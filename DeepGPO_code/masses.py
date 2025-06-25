@@ -24,7 +24,6 @@ import re
 import copy
 import dgl
 import torch
-import ipdb
 # --------------------------- Other masses ----------------------------#
 # http://www.sisweb.com/referenc/source/exactmas.htm
 MASS = {}

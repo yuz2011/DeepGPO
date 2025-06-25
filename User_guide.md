@@ -1,13 +1,19 @@
 # User guide
 ## Requirements and installation
-The DeepGPO.yml lists all the dependencies of the DeepGPO. To quickly set up an environment for our model, use the following command
+The dependencies required to run **DeepGPO** are listed in the `DeepGPO.yml` file. To quickly set up the environment, run the following command:
 ```
 conda env create -f DeepGPO.yml
 ```
-Installing a specific package usually takes a few minutes on a standard desktop and setting up the complete environment may take approximately an hour. Once the library is installed, you can verify the installation by importing the library in Python and checking the version number:
+Setting up the environment typically takes around **20 minutes** on a standard desktop, as some packages may take a few minutes to install individually.
+The environment has been successfully tested.
+Once the setup is complete, activate the environment with:
 ```
+conda activate DeepGPO
+```
+To verify that the installation was successful, try importing a key library and printing its version. For example:
+```python
 import numpy as np
-print(np.__version__) 
+print(np.__version__)
 ```
 ## Example data
 The example data can be found in the `demo_data` folder. 
@@ -36,7 +42,7 @@ Users can navigate to the relevant folder using a command such as cd D:\code\Dee
 (2)	Pre-processing: Convert the library search results (.txt) and experimental glycopeptide spectra (.mgf) into files containing spectral data (.csv).
 
 ```
-python 1_dataset_format_NO.py --datafold D:/code/demo_data/NO/demo/ --dfname pGlycoDB-GP-FDR-Pro-Quant-Site_demo.txt --mgfdatafold mgf_demo --output_name demo_data_1st.csv --mgfsourceorign pGlyco3  --only_duplicated Retained_all  --enzyme None
+python 1_dataset_format_NO.py --datafold ../demo_data/NO/demo/ --dfname pGlycoDB-GP-FDR-Pro-Quant-Site_demo.txt --mgfdatafold mgf_demo --output_name demo_data_1st.csv --mgfsourceorign pGlyco3  --only_duplicated Retained_all  --enzyme None
 ```
 
 The description of the parameters of the command line:
@@ -55,15 +61,15 @@ The description of the parameters of the command line:
 
 `--enzyme`:This parameter specifies the O-glycoproteases used for calculating weights specific to O-glycoprotease-digested glycopeptides.Supported options include enzymes such as None([]), OgpA ([1]), SmE ([1, -1]), StcE ([1, -2]), and others, where the first element is the enzyme name and the second represents the cleavage sites. A negative number indicates counting from the end, where `-1` refers to the last amino acid. If additional cleavage patterns are needed, they can be added to the weight.py script.
 
-
 `--not_use_weights`:To disable the loss re-weighting method, simply append --not_use_weights to the command. This will skip the weight calculation step.
+
 
 (3)	Model Training: Train DeepGPO model for intact glycopeptide MS/MS prediction
 For ease of use, users have the option to utilize our provided trained model for immediate rough testing, thereby bypassing the model training phase. We have uploaded this trained model (DeepGPO_model) to [Google Drive](https://drive.google.com/drive/folders/1KzJm4bE3RkdnZ1hLB2wjQyXoOtP69Zse?usp=drive_link).
 For those with access to other datasets, model training can also be conducted using your own datasets or extensive datasets downloaded from public databases. This provides more flexibility and customization, allowing the model to better adapt to various types of data.
 
 ```
-python 2_train_byBY.py  --model_ablation DeepGP --DeepGP_modelpath D:/code/DeepGP_model/epoch-124_step-47988_mediancos-0.927153.pt  --testdata alltest --task_name demo --folder_path D:/code/demo_data/  --type NO --trainpathcsv demo/train_combine.csv --ms2_method cos_sqrt --pattern *_data_1st.csv 
+python 2_train_byBY.py  --model_ablation DeepGP --DeepGP_modelpath ../DeepGP_model/epoch-124_step-47988_mediancos-0.927153.pt  --testdata alltest --task_name demo --folder_path ../demo_data/  --type NO --trainpathcsv demo/train_combine.csv --ms2_method cos_sqrt --pattern *_data_1st.csv 
 ```
 
 The description of the parameters of the command line:
@@ -90,12 +96,13 @@ The description of the parameters of the command line:
 
 `--device`: This parameter sets the device number for CUDA. If no GPU is available, the CPU will be used by default. The default device number is 0.
 
+
 Advanced users can also adjust the settings available in the code’s utilities (utils.py). The model architecture can be easily modified using keywords. For example, if you type `GNN_global_ablation=GIN`, you will change the GNN architecture for glycan global representation into GIN. If you type `GNN_edge_ablation=GIN`, it means the GNN architecture of glycan B/Y ions intensity prediction is GIN. Users can also change the dimension and layer number by inputting their self-defined number. For example, `GNN_edge_num_layers=7` means that the layer number of GNN for glycan B/Y ions intensity prediction is equal to 7. You can replace “7” with the number of layers you want.
 We highly recommend training DeepGPO using larger datasets. The demo dataset provided contains only 5 unique spectra. While the code can be successfully implemented with this dataset, it is not large enough to effectively train a model. Therefore, for optimal performance and accuracy, consider using larger datasets.
 
 (4)	Prediction: Predict MS/MS glycopeptide spectra with trained model
 ```
-python 3_replace_predict_byBY.py --trainpathcsv D:/code/demo_data/NO/demo/demo_data_1st.csv --datafold D:/code/demo_data/NO/demo/ --bestmodelpath D:/code/DeepGPO_model/epoch-99_step-62172_mediancos-0.938538.pt  --savename demo --ms2_method cos --postprocessing off
+python 3_replace_predict_byBY.py --trainpathcsv ../demo_data/NO/demo/demo_data_1st.csv --datafold ../demo_data/NO/demo/ --bestmodelpath ../DeepGPO_model/epoch-99_step-62172_mediancos-0.938538.pt  --savename demo --ms2_method cos --postprocessing off
 ```
 
 The description of the parameters of the command line:
@@ -116,5 +123,11 @@ The description of the parameters of the command line:
 
 It takes about 1 second to predict 40 spectra on a single RTX 3090 GPU.
 
+## Processing of Doubly Glycosylated Peptides
+
+Example code and data for handling doubly glycosylated peptides are available in the `DeepGPO_multiple` folder. A detailed guide and usage instructions can be found in the corresponding [`User_guide_multiple.md`](DeepGPO_multiple/User_guide_multiple.md) file.
+
+In this scenario, peptide identification results are based on Byonic outputs provided by the original literature. Therefore, the main adjustments are within the data processing code, while the overall usage of the pipeline remain consistent with the main DeepGPO workflow. 
+
 # Contact
-All the demo data and code are provided. A sentence with gray background indicates it is a sentence of code. If you have any further questions, please don't hesitate to ask us via: liang_qiao@fudan.edu.cn. You could also go to the homepage of DeepGPO on GitHub to ask a question.
+All the demo data and code are provided. If you have any further questions, please don't hesitate to ask us via: liang_qiao@fudan.edu.cn. You could also go to the homepage of DeepGPO on GitHub to ask a question.

@@ -203,8 +203,8 @@ if lr_sche=="True":
 from fastNLP import WarmupCallback,SaveModelCallback,LRScheduler
 save_path=filename[:-5]+"/checkpoints"
 callback=[WarmupCallback(warmupsteps)]
-callback.append(WandbCallback(project="Deepsweet",name=check_point_name,config={"lr":lr,"seed":seed,
-"Batch_size":BATCH_SIZE,"warmupsteps":warmupsteps,"temperature":None,"weight_decay":None}))
+# callback.append(WandbCallback(project="Deepsweet",name=check_point_name,config={"lr":lr,"seed":seed,
+# "Batch_size":BATCH_SIZE,"warmupsteps":warmupsteps,"temperature":None,"weight_decay":None}))
 callback.append(SaveModelCallback(save_path,top=5))
 if lr_sche=="True":
     callback.append(LRScheduler(lr_scheduler))
